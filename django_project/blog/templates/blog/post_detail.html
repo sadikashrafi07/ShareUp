@@ -13,7 +13,37 @@
           </div>
         {% endif %}
       </div>
+
+      <!-- Title appears first -->
       <h2 class="article-title">{{ object.title }}</h2>
+
+      <!-- Add space after the title -->
+      <div style="margin-bottom: 20px;"></div>
+
+      <!-- Center the media and scale the video down properly -->
+      {% if object.media %}
+        <div style="display: flex; justify-content: center;">  <!-- Center media horizontally -->
+          {% if ".jpg" in object.media.url or ".jpeg" in object.media.url or ".png" in object.media.url %}
+            <img src="{{ object.media.url }}" alt="Post Media" style="max-width: 60%; height: auto; margin-bottom: 15px;">
+          {% elif ".mp4" in object.media.url or ".avi" in object.media.url or ".mov" in object.media.url %}
+            <!-- Video container for responsive scaling and limiting vertical height -->
+            <div class="video-container" style="max-width: 100%; max-height: 500px; overflow: hidden; margin-bottom: 20px;">
+              <video controls style="width: 100%; height: 100%; object-fit: contain;">
+                <source src="{{ object.media.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          {% elif ".mp3" in object.media.url or ".wav" in object.media.url %}
+            <audio controls style="width: 100%; margin-bottom: 15px;">
+              <source src="{{ object.media.url }}" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <!-- Content comes after media with some spacing -->
+      <div style="margin-top: 20px;"></div>
       <p class="article-content">{{ object.content }}</p>
     </div>
   </article>

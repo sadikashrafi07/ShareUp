@@ -8,7 +8,7 @@ from django.views.generic import (
     DeleteView
 )
 from .models import Post
-
+from .forms import PostForm  # Import the custom form
 
 def home(request):
     context = {
@@ -30,7 +30,7 @@ class PostDetailView(DetailView):
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content']
+    form_class = PostForm  # Use the custom form with media fields
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -39,7 +39,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'content']
+    form_class = PostForm  # Use the custom form with media fields
 
     def form_valid(self, form):
         form.instance.author = self.request.user

@@ -2,15 +2,47 @@
 {% block content %}
     {% for post in posts %}
         <article class="media content-section">
-          <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author }}</a>
-              <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+            <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#">{{ post.author }}</a>
+                    <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+                </div>
+
+                <!-- Title linked to post detail page -->
+                <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+
+                <!-- Add space after the title -->
+                <div style="margin-bottom: 20px;"></div>
+
+                <!-- Center the media file first, if it exists -->
+                {% if post.media %}
+                    <div style="display: flex; justify-content: center;">  <!-- Center media -->
+                        {% if ".jpg" in post.media.url or ".jpeg" in post.media.url or ".png" in post.media.url %}
+                            <img src="{{ post.media.url }}" alt="Post Media" style="max-width: 60%; height: auto; margin-bottom: 10px;">
+                        {% elif ".mp4" in post.media.url or ".avi" in post.media.url or ".mov" in post.media.url %}
+                            <!-- Video container for responsive scaling -->
+                            <div class="video-container" style="max-width: 100%; height: auto; max-height: 500px; overflow: hidden; margin-bottom: 20px;">
+                                <video controls style="width: 100%; height: 100%; object-fit: contain;"> 
+                                    <source src="{{ post.media.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        {% elif ".mp3" in post.media.url or ".wav" in post.media.url %}
+                            <audio controls style="width: 100%; margin-bottom: 10px;">
+                                <source src="{{ post.media.url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <!-- Add some space after media and before content -->
+                <div style="margin-top: 20px;"></div>
+
+                <!-- Content of the post comes after the media -->
+                <p class="article-content">{{ post.content }}</p>
             </div>
-            <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
-            <p class="article-content">{{ post.content }}</p>
-          </div>
         </article>
     {% endfor %}
 {% endblock content %}
